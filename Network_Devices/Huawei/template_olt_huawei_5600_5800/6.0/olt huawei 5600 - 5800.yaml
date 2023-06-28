@@ -1,6 +1,6 @@
 zabbix_export:
   version: '6.0'
-  date: '2023-06-28T11:54:05Z'
+  date: '2023-06-28T13:08:13Z'
   groups:
     - uuid: 7df96b18c230490a9a0a9e2307226338
       name: Templates
@@ -50,6 +50,32 @@ zabbix_export:
           tags:
             - tag: application
               value: onu_uncfg
+        - uuid: 6140af9e4dbb4b45bd6dbb4c14f48c8d
+          name: 'Velocidade FAN'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-SMI::enterprises.2011.6.1.1.5.1.9.0'
+          key: fan_speed
+          history: 5d
+          trends: 15d
+          units: '%'
+          tags:
+            - tag: application
+              value: fan_speed
+          triggers:
+            - uuid: 4694e12e8f924bf4adaa119c96650013
+              expression: 'avg(/OLT Huawei/fan_speed,20m)>(avg(/OLT Huawei/fan_speed,5h) * 1.5)'
+              name: 'Aumento 50% velocidade FAN'
+              priority: WARNING
+              tags:
+                - tag: trigger
+                  value: aumento_50%_velocidade_FAN
+            - uuid: 7c4ba0280dd34f04a477fd8685903afb
+              expression: 'avg(/OLT Huawei/fan_speed,5m)>=90'
+              name: 'Velocidade Fan acima 90%'
+              priority: HIGH
+              tags:
+                - tag: trigger
+                  value: velocidade_fan_90%+
         - uuid: 25f83bb4b3d74a4788f3fd4656224f5c
           name: 'Number of network interfaces'
           type: SNMP_AGENT
